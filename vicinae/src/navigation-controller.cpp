@@ -389,6 +389,7 @@ void NavigationController::setStatusBarVisibility(bool value, const BaseView *ca
 }
 
 void NavigationController::executeAction(AbstractAction *action) {
+  using namespace std::chrono_literals;
   auto state = topState();
 
   if (!state) return;
@@ -413,10 +414,11 @@ void NavigationController::executeAction(AbstractAction *action) {
     }
   }
 
+  if (action->autoClose()) { closeWindow({.clearRootSearch = true}, 3000ms); }
+
   action->execute(&m_ctx);
   closeActionPanel();
 
-  if (action->autoClose()) { closeWindow({.clearRootSearch = true}); }
 }
 
 AbstractAction *NavigationController::findBoundAction(const QKeyEvent *event) const {
